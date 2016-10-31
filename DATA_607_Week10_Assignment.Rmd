@@ -1,0 +1,96 @@
+---
+title: "Untitled"
+author: "Md Jalal Uddin"
+date: "October 30, 2016"
+output: html_document
+---
+
+```{r}
+#By using jsonlite package I read JSON file that contain the book lists from best seller list. 
+
+library(jsonlite)
+book_list <- fromJSON("https://api.nytimes.com/svc/books/v3/lists/best-sellers/history.json?api-key=66395d5789f149268e5fcdab78d415f8")
+
+head(book_list,3) # to see the file 
+
+
+```
+
+
+```{r}
+#Show few examle of how to readthe specific column from the data
+
+colnames(book_list$results) # to view all the column names
+
+(title_name <- book_list$results$title) # to view all the book title from the "title" column.
+
+
+(author_name <- book_list$results$author) # to view all the author name from the "author" column.
+
+(publisher_name <- book_list$results$publisher) # to view all the book publisher name from the "publisher" column.
+
+(Price_list <- book_list$results$price) # to view the book prices from the "price" column.
+
+```
+
+
+```{r}
+#creating a data frame to read the data
+library (plyr)
+df_book <- ldply (book_list[4], data.frame)
+
+```
+
+```{r}
+length(df_book) #read the length of the data frame.
+
+```
+
+```{r}
+names(df_book) #read all the columns from the data frame
+
+```
+
+```{r}
+# title of the book
+df_book[,"title"]
+
+#author of the book
+df_book [, "author"]
+
+#isbn number of the book
+df_book [, "isbns"]
+
+# example of full details of 4th title and 4th author:
+df_book[4,]
+
+```
+
+```{r}
+#Create a data frame to view all the result.  
+df_book1 <- data.frame(book_list$results)
+head(df_book1,5)
+
+```
+
+```{r}
+#combine specific columns from the data frame. 
+df_book2 <- data.frame(df_book1[c(1, 4, 8, 9)])
+head(df_book2)
+
+```
+
+```{r}
+# create a data frame again to combine specific columns, save them as a csve file. 
+df_book3 <- data.frame(df_book2[c(1, 2)])
+head(df_book3)
+
+```
+
+```{r}
+#save the data frame into csv files.
+write.csv(df_book3, file = "C:/Users/sql_ent_svc/Desktop/MSDA Assignment/DATA_607/Assignment_week_10/books.csv")
+
+
+```
+
